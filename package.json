@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "Awesome project developed with TypeORM.",
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/node": "^8.0.29",
+    "@types/uuid": "^7.0.3",
     "nodemon": "^2.0.3",
     "ts-node": "3.3.0",
     "tslint": "^6.1.2",
@@ -11,13 +13,18 @@
     "typescript": "3.3.3333"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "gql2ts": "^1.10.1",
+    "graphql-import": "^1.0.2",
     "graphql-yoga": "^1.18.3",
     "pg": "^7.3.0",
     "reflect-metadata": "^0.1.10",
-    "typeorm": "0.2.24"
+    "typeorm": "0.2.24",
+    "uuid": "^8.0.0"
   },
   "scripts": {
-    "start": "nodemon --exec ts-node src/index.ts"
+    "start": "nodemon --exec ts-node src/index.ts",
+    "gen-schema-types": "gql2ts src/schema.graphql -o src/types/schema.d.ts"
   },
   "license": "MIT"
 }
