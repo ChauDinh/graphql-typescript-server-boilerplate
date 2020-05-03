@@ -6,11 +6,16 @@ import * as path from "path";
 
 import { resolvers } from "./resolvers";
 
-const typeDefs = importSchema(path.join(__dirname, "./schema.graphql"));
+export const startServer = async () => {
+  const typeDefs = importSchema(path.join(__dirname, "./schema.graphql"));
 
-const server = new GraphQLServer({ typeDefs, resolvers });
+  const server = new GraphQLServer({ typeDefs, resolvers });
 
-// Connect to the database
-createConnection().then(() => {
-  server.start(() => console.log("🎉 Server is running on localhost:4000"));
-});
+  // Connect to the database
+  await createConnection();
+  await server.start(() =>
+    console.log("🎉 Server is running on localhost:4000")
+  );
+};
+
+startServer();
