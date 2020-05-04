@@ -1,6 +1,6 @@
-import { ResolverMap } from "./types/graphql-utils.d";
 import * as bcrypt from "bcryptjs";
 
+import { ResolverMap } from "./types/graphql-utils.d";
 import { User } from "./entity/User";
 
 export const resolvers: ResolverMap = {
