@@ -7,6 +7,7 @@
     "@types/jest": "^25.2.1",
     "@types/node": "^13.13.4",
     "@types/uuid": "^7.0.3",
+    "@types/yup": "^0.28.0",
     "jest": "^25.5.4",
     "nodemon": "^2.0.3",
     "start-server-and-test": "^1.11.0",
@@ -25,7 +26,8 @@
     "graphql-yoga": "^1.18.3",
     "pg": "^8.0.3",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "0.2.24"
+    "typeorm": "0.2.24",
+    "yup": "^0.28.5"
   },
   "scripts": {
     "start": "NODE_ENV=development nodemon --exec ts-node src/index.ts",
