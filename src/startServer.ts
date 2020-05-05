@@ -5,7 +5,6 @@ import * as fs from "fs";
 import { mergeSchemas, makeExecutableSchema } from "graphql-tools";
 import { GraphQLSchema } from "graphql";
 import * as Redis from "ioredis";
-import { getConnection } from "typeorm";
 
 import { createTypeORMConnection } from "./utils/createTypeORMConnection";
 import { User } from "./entity/User";
@@ -38,12 +37,8 @@ export const startServer = async () => {
     const { id } = req.params;
     const userId = await redis.get(id);
     if (userId) {
-      await getConnection()
-        .createQueryBuilder()
-        .update(User)
-        .set({ confirmed: true })
-        .where("id = :id", { id: userId });
-
+      User.update({ id: userId }, { confirmed: true });
+      await redis.del(id);
       res.send("ok");
     } else {
       res.send("invalid");
