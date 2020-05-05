@@ -41,6 +41,7 @@
   },
   "license": "MIT",
   "jest": {
+    "globalSetup": "./src/jestGlobalSetup/callSetup.js",
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
