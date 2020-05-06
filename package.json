@@ -20,6 +20,7 @@
     "typescript": "3.8.3"
   },
   "dependencies": {
+    "@gql2ts/from-schema": "^2.0.0-4",
     "bcryptjs": "^2.4.3",
     "gql2ts": "^1.10.1",
     "graphql-import": "^1.0.2",

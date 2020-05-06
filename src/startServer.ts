@@ -4,10 +4,10 @@ import * as path from "path";
 import * as fs from "fs";
 import { mergeSchemas, makeExecutableSchema } from "graphql-tools";
 import { GraphQLSchema } from "graphql";
-import * as Redis from "ioredis";
 
+import { redis } from "./redis";
 import { createTypeORMConnection } from "./utils/createTypeORMConnection";
-import { User } from "./entity/User";
+import confirmRoute from "./routes/confirmEmail.route";
 
 export const startServer = async () => {
   const schemas: GraphQLSchema[] = [];
@@ -21,9 +21,6 @@ export const startServer = async () => {
     schemas.push(makeExecutableSchema({ resolvers, typeDefs }));
   });
 
-  // create an instance of redis
-  const redis = new Redis();
-
   const server = new GraphQLServer({
     schema: mergeSchemas({ schemas }),
     context: ({ request }) => ({
@@ -33,17 +30,7 @@ export const startServer = async () => {
   });
 
   // GET route for confirm message
-  server.express.get("/confirm/:id", async (req, res, _) => {
-    const { id } = req.params;
-    const userId = await redis.get(id);
-    if (userId) {
-      User.update({ id: userId }, { confirmed: true });
-      await redis.del(id);
-      res.send("ok");
-    } else {
-      res.send("invalid");
-    }
-  });
+  server.express.use("/confirm", confirmRoute);
 
   // Connect to the database
   await createTypeORMConnection();
