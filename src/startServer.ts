@@ -2,6 +2,8 @@ import { generateSchema } from "./utils/generateSchema";
 import { GraphQLServer } from "graphql-yoga";
 import * as session from "express-session";
 import * as connectRedis from "connect-redis";
+import "reflect-metadata";
+import "dotenv/config";
 
 import { redis } from "./redis";
 import { createTypeORMConnection } from "./utils/createTypeORMConnection";
@@ -43,7 +45,10 @@ export const startServer = async () => {
   // Setting CORS
   const cors = {
     credentials: true,
-    origin: process.env.FRONTEND_HOST as string,
+    origin:
+      process.env.NODE_ENV === "test"
+        ? "*"
+        : (process.env.FRONTEND_HOST as string),
   };
 
   // GET route for confirm message

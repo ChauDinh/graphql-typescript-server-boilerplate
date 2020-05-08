@@ -9,10 +9,10 @@ import { createConfirmEmailLink } from "./createConfirmEmailLink";
 let userId = "";
 const redis = new Redis();
 
-let connection: Connection;
+let conn: Connection;
 
 beforeAll(async () => {
-  connection = await createTypeORMConnection();
+  conn = await createTypeORMConnection();
 
   const user = await User.create({
     email: "bob5@bob5.com",
@@ -23,7 +23,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  connection.close();
+  conn.close();
 });
 
 describe("Create confirm email link", () => {
