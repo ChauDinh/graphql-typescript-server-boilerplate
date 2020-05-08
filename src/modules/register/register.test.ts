@@ -1,3 +1,4 @@
+import { Connection } from "typeorm";
 import { request } from "graphql-request";
 
 import { User } from "../../entity/User";
@@ -28,8 +29,12 @@ const mutation = (e: string, p: string) => `
   }
 `;
 
+let conn: Connection;
 beforeAll(async () => {
-  await createTypeORMConnection();
+  conn = await createTypeORMConnection();
+});
+afterAll(async () => {
+  conn.close();
 });
 
 describe("Register user", () => {
