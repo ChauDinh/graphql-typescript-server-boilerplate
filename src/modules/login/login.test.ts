@@ -1,40 +1,76 @@
 import { request } from "graphql-request";
 
-// const email = "bob1@bob1.com";
-// const password = "123abc";
+import { notConfirmEmail, invalidLogin } from "./errorMessage";
+import { User } from "../../entity/User";
+import { createTypeORMConnection } from "../../utils/createTypeORMConnection";
 
-// const registerMutation = (e: string, p: string) => `
-// mutation {
-// register(email: "${e}", password: "${p}") {
-// path
-// message
-// }
-// }
-// `;
+const email = "bob1@bob1.com";
+const password = "123abc";
 
-const loginMutation = (e: string, p: string) => `
-	mutation {
-		login(email: "${e}", password: "${p}") {
-			path
-			message
-		}
-	}
+const registerMutation = (e: string, p: string) => `
+  mutation {
+    register(email: "${e}", password: "${p}") {
+      path
+      message
+    }
+  }
 `;
 
+const loginMutation = (e: string, p: string) => `
+  mutation {
+    login(email: "${e}", password: "${p}") {
+      path
+      message
+    }
+  }
+`;
+
+beforeAll(async () => {
+  await createTypeORMConnection();
+});
+
+const loginExpectError = async (e: string, p: string, errMsg: string) => {
+  const response = await request(
+    process.env.TEST_HOST as string,
+    loginMutation(e, p)
+  );
+
+  expect(response).toEqual({
+    login: [
+      {
+        path: "email",
+        message: errMsg,
+      },
+    ],
+  });
+};
+
 describe("Login user", () => {
-  it("test invalid login", async () => {
+  it("email not found send back error", async () => {
+    await loginExpectError("bob@bob.com", "whatever123", invalidLogin);
+  });
+
+  it("email not confirmed", async () => {
+    await request(
+      process.env.TEST_HOST as string,
+      registerMutation(email, password)
+    );
+    await loginExpectError(email, password, notConfirmEmail);
+
+    await User.update({ email }, { confirmed: true });
+  });
+
+  it("bad login password", async () => {
+    await loginExpectError(email, "adfasdfasdfasdf233", invalidLogin);
+  });
+
+  it("make sure the success login", async () => {
     const response = await request(
       process.env.TEST_HOST as string,
-      loginMutation("bob@bob.com", "whatever123")
+      loginMutation(email, password)
     );
-
     expect(response).toEqual({
-      login: [
-        {
-          path: "email",
-          message: "invalid login",
-        },
-      ],
+      login: null,
     });
   });
 });
