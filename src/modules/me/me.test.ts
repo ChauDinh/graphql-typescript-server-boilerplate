@@ -1,11 +1,12 @@
 import { Connection } from "typeorm";
+// import fetch from "node-fetch";
 import axios from "axios";
 
 import { User } from "./../../entity/User";
 import { createTypeORMConnection } from "./../../utils/createTypeORMConnection";
 
-const email = "bob5@bob5.com";
-const password = "abcde12345";
+const email = "bob1@bob1.com";
+const password = "123abc";
 
 let userId: string;
 let conn: Connection;
@@ -41,8 +42,13 @@ const meQuery = `
 `;
 
 describe("Test middleware", () => {
-  // it("can't get user if not login", async () => {});
-  it("get current user", async () => {
+  // test("return null with no cookie", async () => {
+  //   const response = await axios.post(process.env.TEST_HOST as string, {
+  //     query: meQuery,
+  //   });
+  //   expect(response.data.data.me).toBeNull();
+  // });
+  test("get current user", async () => {
     await axios.post(
       process.env.TEST_HOST as string,
       {
@@ -63,6 +69,7 @@ describe("Test middleware", () => {
       }
     );
 
+    console.log(response.data.data);
     expect(response.data.data).toEqual({
       me: {
         id: userId,

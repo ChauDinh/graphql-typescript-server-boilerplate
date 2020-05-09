@@ -63,13 +63,9 @@ describe("Login user", () => {
     await loginExpectError(email, password, notConfirmEmail);
 
     await User.update({ email }, { confirmed: true });
-  });
 
-  it("bad login password", async () => {
     await loginExpectError(email, "adfasdfasdfasdf233", invalidLogin);
-  });
 
-  it("make sure the success login", async () => {
     const response = await request(
       process.env.TEST_HOST as string,
       loginMutation(email, password)

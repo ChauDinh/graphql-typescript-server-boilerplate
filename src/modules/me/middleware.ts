@@ -9,6 +9,5 @@ export default async (
   // middleware
   const result = await resolver(parent, args, context, info);
 
-  console.log(result);
   return result;
 };

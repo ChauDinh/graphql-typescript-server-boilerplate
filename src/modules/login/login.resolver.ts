@@ -17,9 +17,12 @@ export const resolvers: ResolverMap = {
   },
 
   Mutation: {
-    login: async (_, args: GQL.ILoginOnMutationArguments, { session }) => {
+    login: async (
+      _,
+      { email, password }: GQL.ILoginOnMutationArguments,
+      { session }
+    ) => {
       // try to find the user with the given email
-      const { email, password } = args;
 
       const user = await User.findOne({ where: { email } });
 
