@@ -51,11 +51,11 @@ const loginExpectError = async (e: string, p: string, errMsg: string) => {
 };
 
 describe("Login user", () => {
-  it("email not found send back error", async () => {
+  test("email not found send back error", async () => {
     await loginExpectError("bob@bob.com", "whatever123", invalidLogin);
   });
 
-  it("email not confirmed", async () => {
+  test("email not confirmed", async () => {
     await request(
       process.env.TEST_HOST as string,
       registerMutation(email, password)
