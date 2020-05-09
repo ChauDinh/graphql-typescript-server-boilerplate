@@ -1,6 +1,6 @@
+import axios from "axios";
 import { Connection } from "typeorm";
 // import fetch from "node-fetch";
-import axios from "axios";
 
 import { User } from "./../../entity/User";
 import { createTypeORMConnection } from "./../../utils/createTypeORMConnection";
@@ -23,15 +23,6 @@ afterAll(async () => {
   conn.close();
 });
 
-const loginMutation = (e: string, p: string) => `
-  mutation {
-    login(email: "${e}", password: "${p}") {
-      path
-      message
-    }
-  }
-`;
-
 const meQuery = `
   {
     me {
@@ -41,14 +32,24 @@ const meQuery = `
   }
 `;
 
-describe("Test middleware", () => {
-  test("return null with no cookie", async () => {
-    const response = await axios.post(process.env.TEST_HOST as string, {
-      query: meQuery,
-    });
-    expect(response.data.data.me).toBeNull();
-  });
-  test("get current user", async () => {
+const loginMutation = (e: string, p: string) => `
+  mutation {
+    login(email: "${e}", password: "${p}") {
+      path
+      message
+    }
+  }
+`;
+
+const logoutMutation = `
+  mutation {
+    logout
+  }
+`;
+
+describe("Test logout", () => {
+  test("test logging out an account", async () => {
+    //   STEP 1: login success and send cookie
     await axios.post(
       process.env.TEST_HOST as string,
       {
@@ -75,5 +76,28 @@ describe("Test middleware", () => {
         email,
       },
     });
+
+    // STEP 2: logout success
+    await axios.post(
+      process.env.TEST_HOST as string,
+      {
+        query: logoutMutation,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+
+    // STEP 3: check whether cookie (userId) exits in redis
+    const response2 = await axios.post(
+      process.env.TEST_HOST as string,
+      {
+        query: meQuery,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    expect(response2.data.data.me).toBeNull();
   });
 });
