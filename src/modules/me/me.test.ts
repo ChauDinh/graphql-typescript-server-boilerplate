@@ -46,6 +46,7 @@ describe("Test middleware", () => {
     const response = await axios.post(process.env.TEST_HOST as string, {
       query: meQuery,
     });
+    console.log(response.data);
     expect(response.data.data.me).toBeNull();
   });
   test("get current user", async () => {
@@ -69,7 +70,6 @@ describe("Test middleware", () => {
       }
     );
 
-    console.log(response.data.data);
     expect(response.data.data).toEqual({
       me: {
         id: userId,

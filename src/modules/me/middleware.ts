@@ -7,9 +7,5 @@ export default async (
   context: any,
   info: any
 ) => {
-  console.log("called!");
-  if (!context.session || !context.session.userId) {
-    throw Error("no cookie");
-  }
   return resolver(parent, args, context, info);
 };
