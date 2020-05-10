@@ -3,6 +3,7 @@ import * as bcrypt from "bcryptjs";
 import { ResolverMap } from "../../types/graphql-utils";
 import { User } from "../../entity/User";
 import { invalidLogin, notConfirmEmail } from "./errorMessage";
+import { userSessionIdPrefix } from "./../../constants";
 
 const errorResponse = [
   {
@@ -20,7 +21,7 @@ export const resolvers: ResolverMap = {
     login: async (
       _,
       { email, password }: GQL.ILoginOnMutationArguments,
-      { session }
+      { session, redis, req }
     ) => {
       // try to find the user with the given email
 
@@ -47,6 +48,9 @@ export const resolvers: ResolverMap = {
 
       // login successful, create cookie for user
       session.userId = user.id;
+      if (req.sessionID) {
+        await redis.lpush(`${userSessionIdPrefix}${user.id}`, req.sessionID);
+      }
 
       return null;
     },

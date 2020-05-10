@@ -24,7 +24,21 @@ afterAll(async () => {
 });
 
 describe("Test logout", () => {
-  test("test logging out an account", async () => {
+  test("test logging out an account, multiple sessions", async () => {
+    // device 1 (ex: computer)
+    const session1 = new TestClient(process.env.TEST_HOST as string);
+    // device 2 (ex: phone)
+    const session2 = new TestClient(process.env.TEST_HOST as string);
+
+    await session1.login(email, password);
+    await session2.login(email, password);
+    expect(await session1.me()).toEqual(await session2.me());
+
+    // logout on session1
+    await session1.logout();
+    expect(await session1.me()).toEqual(await session2.me());
+  });
+  test("test logging out an account, single session", async () => {
     const client = new TestClient(process.env.TEST_HOST as string);
 
     //   STEP 1: login success and send cookie

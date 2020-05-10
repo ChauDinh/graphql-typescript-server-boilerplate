@@ -8,6 +8,7 @@ import * as connectRedis from "connect-redis";
 import { redis } from "./redis";
 import { createTypeORMConnection } from "./utils/createTypeORMConnection";
 import confirmRoute from "./routes/confirmEmail.route";
+import { redisSessionPrefix } from "./constants";
 
 const SESSION_SECRET = "bnjm39k0Ldf9XXedn";
 
@@ -21,6 +22,7 @@ export const startServer = async () => {
       redis,
       url: request.protocol + "://" + request.get("host"),
       session: request.session,
+      req: request,
     }),
   });
 
@@ -29,6 +31,7 @@ export const startServer = async () => {
     session({
       store: new RedisStore({
         client: redis as any,
+        prefix: redisSessionPrefix,
       }),
       name: "bid",
       secret: SESSION_SECRET,
