@@ -1,19 +1,14 @@
+import { registerPasswordValidation } from "./../../yupSchema";
 import * as yup from "yup";
 
-// import { sendConfirmEmail } from "./../../utils/sendConfirmEmail";
 import { ResolverMap } from "../../types/graphql-utils";
 import { User } from "../../entity/User";
 import { formatYupErrors } from "./../../utils/formatYupErrors";
-import {
-  emailNotLongEnough,
-  invalidEmail,
-  passwordNotLongEnough,
-} from "./errorMessage";
-// import { createConfirmEmailLink } from "./../../utils/createConfirmEmailLink";
+import { emailNotLongEnough, invalidEmail } from "./errorMessage";
 
 const schema = yup.object().shape({
   email: yup.string().min(3, emailNotLongEnough).max(255).email(invalidEmail),
-  password: yup.string().min(6, passwordNotLongEnough).max(255),
+  password: registerPasswordValidation,
 });
 
 export const resolvers: ResolverMap = {
