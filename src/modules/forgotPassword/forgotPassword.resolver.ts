@@ -19,7 +19,7 @@ const schema = yup.object().shape({
   newPassword: registerPasswordValidation,
 });
 
-export const resolver: ResolverMap = {
+export const resolvers: ResolverMap = {
   Query: {
     dummy2: () => "bye",
   },
@@ -54,7 +54,6 @@ export const resolver: ResolverMap = {
       { redis }
     ) => {
       const redisKey = `${forgotPasswordPrefix}${key}`;
-
       const userId = await redis.get(redisKey);
       if (!userId) {
         return [
