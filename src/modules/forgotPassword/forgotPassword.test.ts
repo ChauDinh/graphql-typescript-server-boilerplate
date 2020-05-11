@@ -1,7 +1,8 @@
-import * as Redis from "ioredis";
-import { Connection } from "typeorm";
-
 import { createTypeORMConnection } from "./../../utils/createTypeORMConnection";
+import { Connection } from "typeorm";
+import * as Redis from "ioredis";
+
+// import { createTestConnection } from "./../../jestGlobalSetup/createTestConnection";
 import { createForgotPasswordLink } from "./../../utils/createForgotPasswordLink";
 import { forgotPasswordLockAccount } from "./../../utils/forgotPasswordLockAccount";
 import { passwordNotLongEnough } from "./../register/errorMessage";
@@ -13,8 +14,8 @@ import { User } from "./../../entity/User";
 let conn: Connection;
 const redis = new Redis();
 const email = "bob5@bob5.com";
-const password = "123abc";
-const newPassword = "asdijfasd284SFAdafs";
+const password = "123abcde";
+const newPassword = "asdfhjasdoufh38A";
 let userId: string;
 
 beforeAll(async () => {
@@ -71,7 +72,7 @@ describe("Test forgot password", () => {
     });
 
     //  STEP 4: make sure the redis key expires after password changed
-    expect(await client.forgotPasswordChange("asdfadfs", key)).toEqual({
+    expect(await client.forgotPasswordChange("asdf77F", key)).toEqual({
       data: {
         forgotPasswordChange: [
           {

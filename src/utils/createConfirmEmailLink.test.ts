@@ -1,10 +1,11 @@
+import { createTypeORMConnection } from "./createTypeORMConnection";
+import { Connection } from "typeorm";
 import * as Redis from "ioredis";
 import fetch from "node-fetch";
-import { Connection } from "typeorm";
 
 import { User } from "../entity/User";
-import { createTypeORMConnection } from "./createTypeORMConnection";
 import { createConfirmEmailLink } from "./createConfirmEmailLink";
+// import { createTestConnection } from "./../jestGlobalSetup/createTestConnection";
 
 let userId = "";
 const redis = new Redis();

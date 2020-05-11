@@ -1,8 +1,9 @@
+import { createTypeORMConnection } from "./../../utils/createTypeORMConnection";
 import { TestClient } from "./../../utils/TestClient";
 
 import { notConfirmEmail, invalidLogin } from "./errorMessage";
 import { User } from "../../entity/User";
-import { createTypeORMConnection } from "../../utils/createTypeORMConnection";
+// import { createTestConnection } from "./../../jestGlobalSetup/createTestConnection";
 import { Connection } from "typeorm";
 
 const email = "bob1@bob1.com";

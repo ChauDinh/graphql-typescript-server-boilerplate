@@ -1,3 +1,4 @@
+import { createTypeORMConnection } from "./../../utils/createTypeORMConnection";
 import { TestClient } from "./../../utils/TestClient";
 import { Connection } from "typeorm";
 
@@ -7,7 +8,7 @@ import {
   invalidEmail,
   passwordNotLongEnough,
 } from "./errorMessage";
-import { createTypeORMConnection } from "../../utils/createTypeORMConnection";
+// import { createTestConnection } from "./../../jestGlobalSetup/createTestConnection";
 
 /**
  * TODO:

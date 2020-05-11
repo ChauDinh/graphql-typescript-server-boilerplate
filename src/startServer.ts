@@ -9,6 +9,7 @@ import * as RateLimitRedisStore from "rate-limit-redis";
 
 import { redis } from "./redis";
 import { createTypeORMConnection } from "./utils/createTypeORMConnection";
+// import { createTestConnection } from "./jestGlobalSetup/createTestConnection";
 import confirmRoute from "./routes/confirmEmail.route";
 import { redisSessionPrefix } from "./constants";
 

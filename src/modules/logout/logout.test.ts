@@ -1,9 +1,10 @@
+import { createTypeORMConnection } from "./../../utils/createTypeORMConnection";
 import { Connection } from "typeorm";
 // import fetch from "node-fetch";
 
 import { User } from "./../../entity/User";
-import { createTypeORMConnection } from "./../../utils/createTypeORMConnection";
 import { TestClient } from "./../../utils/TestClient";
+// import { createTestConnection } from "./../../jestGlobalSetup/createTestConnection";
 
 const email = "bob5@bob5.com";
 const password = "abcde12345";
