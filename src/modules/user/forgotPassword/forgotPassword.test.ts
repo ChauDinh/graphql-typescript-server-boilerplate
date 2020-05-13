@@ -1,25 +1,27 @@
-import { createTypeORMConnection } from "./../../utils/createTypeORMConnection";
+// import { createTypeORMConnection } from "./../../utils/createTypeORMConnection";
 import { Connection } from "typeorm";
 import * as Redis from "ioredis";
+import * as faker from "faker";
 
 // import { createTestConnection } from "./../../jestGlobalSetup/createTestConnection";
-import { createForgotPasswordLink } from "./../../utils/createForgotPasswordLink";
-import { forgotPasswordLockAccount } from "./../../utils/forgotPasswordLockAccount";
-import { passwordNotLongEnough } from "./../register/errorMessage";
-import { forgotPasswordLockedError } from "./../login/errorMessage";
-import { TestClient } from "./../../utils/TestClient";
+import { createForgotPasswordLink } from "../../../utils/createForgotPasswordLink";
+import { forgotPasswordLockAccount } from "../../../utils/forgotPasswordLockAccount";
+import { passwordNotLongEnough } from "../register/errorMessage";
+import { forgotPasswordLockedError } from "../login/errorMessage";
+import { TestClient } from "../../../utils/TestClient";
 import { expiredKeyError } from "./errorMessage";
-import { User } from "./../../entity/User";
+import { User } from "../../../entity/User";
+import { createTestConnection } from "../../../testUtils/createTestConnection";
 
 let conn: Connection;
-const redis = new Redis();
-const email = "bob5@bob5.com";
-const password = "123abcde";
-const newPassword = "asdfhjasdoufh38A";
+export const redis = new Redis();
+const email = faker.internet.email();
+const password = faker.internet.password();
+const newPassword = faker.internet.password();
 let userId: string;
 
 beforeAll(async () => {
-  conn = await createTypeORMConnection();
+  conn = await createTestConnection();
   const user = await User.create({
     email,
     password,
@@ -72,7 +74,9 @@ describe("Test forgot password", () => {
     });
 
     //  STEP 4: make sure the redis key expires after password changed
-    expect(await client.forgotPasswordChange("asdf77F", key)).toEqual({
+    expect(
+      await client.forgotPasswordChange(faker.internet.password(), key)
+    ).toEqual({
       data: {
         forgotPasswordChange: [
           {

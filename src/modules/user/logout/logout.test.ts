@@ -1,18 +1,18 @@
-import { createTypeORMConnection } from "./../../utils/createTypeORMConnection";
+import { createTestConnection } from "../../../testUtils/createTestConnection";
 import { Connection } from "typeorm";
-// import fetch from "node-fetch";
+import * as faker from "faker";
 
-import { User } from "./../../entity/User";
-import { TestClient } from "./../../utils/TestClient";
+import { User } from "../../../entity/User";
+import { TestClient } from "../../../utils/TestClient";
 // import { createTestConnection } from "./../../jestGlobalSetup/createTestConnection";
 
-const email = "bob5@bob5.com";
-const password = "abcde12345";
+const email = faker.internet.email();
+const password = faker.internet.password();
 
 let userId: string;
 let conn: Connection;
 beforeAll(async () => {
-  conn = await createTypeORMConnection();
+  conn = await createTestConnection();
   const user = await User.create({
     email,
     password,

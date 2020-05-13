@@ -9,9 +9,9 @@ import * as RateLimitRedisStore from "rate-limit-redis";
 
 import { redis } from "./redis";
 import { createTypeORMConnection } from "./utils/createTypeORMConnection";
-// import { createTestConnection } from "./jestGlobalSetup/createTestConnection";
 import confirmRoute from "./routes/confirmEmail.route";
 import { redisSessionPrefix } from "./constants";
+import { createTestConnection } from "./testUtils/createTestConnection";
 
 const SESSION_SECRET = "bnjm39k0Ldf9XXedn";
 
@@ -19,8 +19,12 @@ const SESSION_SECRET = "bnjm39k0Ldf9XXedn";
 const RedisStore = connectRedis(session);
 
 export const startServer = async () => {
+  // if (process.env.NODE_ENV === "test") {
+  //   await redis.flushall();
+  // }
+
   const server = new GraphQLServer({
-    schema: generateSchema(),
+    schema: generateSchema() as any,
     context: ({ request }) => ({
       redis,
       url: request.protocol + "://" + request.get("host"),
@@ -72,7 +76,12 @@ export const startServer = async () => {
   server.express.use("/confirm", confirmRoute);
 
   // Connect to the database
-  await createTypeORMConnection();
+  if (process.env.NODE_ENV === "test") {
+    await createTestConnection(true);
+  } else {
+    await createTypeORMConnection();
+  }
+
   const app = await server.start({
     cors,
     port: process.env.NODE_ENV === "test" ? 0 : 4000,

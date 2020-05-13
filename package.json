@@ -3,10 +3,13 @@
   "version": "0.0.1",
   "description": "Awesome project developed with TypeORM.",
   "devDependencies": {
+    "@gql2ts/types": "^1.9.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/connect-redis": "^0.0.13",
     "@types/express-rate-limit": "^3.3.4",
     "@types/express-session": "^1.17.0",
+    "@types/faker": "^4.1.11",
+    "@types/glob": "5.0.35",
     "@types/ioredis": "^4.16.0",
     "@types/jest": "^25.2.1",
     "@types/node": "^13.13.4",
@@ -32,12 +35,15 @@
     "dotenv": "^8.2.0",
     "express-rate-limit": "3.4.1",
     "express-session": "^1.17.1",
+    "faker": "^4.1.0",
+    "glob": "7.1.2",
     "gql2ts": "^1.10.1",
     "graphql-import": "^1.0.2",
     "graphql-request": "^1.8.2",
     "graphql-tools": "^5.0.0",
     "graphql-yoga": "^1.18.3",
     "ioredis": "^4.16.3",
+    "merge-graphql-schemas": "^1.7.8",
     "node-fetch": "^2.6.0",
     "pg": "^8.0.3",
     "rate-limit-redis": "^1.7.0",
@@ -51,11 +57,11 @@
   "scripts": {
     "start": "NODE_ENV=development nodemon --exec ts-node src/index.ts",
     "gen-schema-types": "ts-node src/scripts/createTypes.ts",
-    "test": "NODE_ENV=test jest --watch --runInBand"
+    "test": "NODE_ENV=test jest --watch"
   },
   "license": "MIT",
   "jest": {
-    "globalSetup": "./src/jestGlobalSetup/callSetup.js",
+    "globalSetup": "./src/testUtils/callSetup.js",
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },

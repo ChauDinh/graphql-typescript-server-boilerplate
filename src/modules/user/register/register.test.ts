@@ -1,8 +1,9 @@
-import { createTypeORMConnection } from "./../../utils/createTypeORMConnection";
-import { TestClient } from "./../../utils/TestClient";
+import { createTestConnection } from "../../../testUtils/createTestConnection";
+import { TestClient } from "../../../utils/TestClient";
 import { Connection } from "typeorm";
+import * as faker from "faker";
 
-import { User } from "../../entity/User";
+import { User } from "../../../entity/User";
 import {
   emailNotLongEnough,
   invalidEmail,
@@ -18,12 +19,13 @@ import {
  * when I run yarn test it also starts the server
  */
 
-const email = "bob1@bob1.com";
-const password = "123abc";
+const email = faker.internet.email();
+const password = faker.internet.password();
+const client = new TestClient(process.env.TEST_HOST as string);
 
 let conn: Connection;
 beforeAll(async () => {
-  conn = await createTypeORMConnection();
+  conn = await createTestConnection();
 });
 afterAll(async () => {
   conn.close();
@@ -31,7 +33,6 @@ afterAll(async () => {
 
 describe("Register user", () => {
   it("Check for duplicated email", async () => {
-    const client = new TestClient(process.env.TEST_HOST as string);
     // make sure we can register new user
     const response = await client.register(email, password);
     expect(response.data).toEqual({ register: null });
@@ -51,7 +52,6 @@ describe("Register user", () => {
   });
 
   it("Check for bad email", async () => {
-    const client = new TestClient(process.env.TEST_HOST as string);
     const response3: any = await client.register("b", password);
     expect(response3.data).toEqual({
       register: [
@@ -68,8 +68,7 @@ describe("Register user", () => {
   });
 
   it("Check for bad password", async () => {
-    const client = new TestClient(process.env.TEST_HOST as string);
-    const response4: any = await client.register(email, "b");
+    const response4: any = await client.register(faker.internet.email(), "b");
     expect(response4.data).toEqual({
       register: [
         {
@@ -81,7 +80,6 @@ describe("Register user", () => {
   });
 
   it("Check for bad email and bad password", async () => {
-    const client = new TestClient(process.env.TEST_HOST as string);
     const response5: any = await client.register("a", "a");
     expect(response5.data).toEqual({
       register: [

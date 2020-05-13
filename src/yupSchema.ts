@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import { passwordNotLongEnough } from "./modules/register/errorMessage";
+import { passwordNotLongEnough } from "./modules/user/register/errorMessage";
 
 export const registerPasswordValidation = yup
   .string()

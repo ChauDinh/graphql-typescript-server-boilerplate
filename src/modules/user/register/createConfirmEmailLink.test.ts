@@ -1,11 +1,11 @@
-import { createTypeORMConnection } from "./createTypeORMConnection";
+import { createTestConnection } from "../../../testUtils/createTestConnection";
 import { Connection } from "typeorm";
 import * as Redis from "ioredis";
 import fetch from "node-fetch";
+import * as faker from "faker";
 
-import { User } from "../entity/User";
+import { User } from "../../../entity/User";
 import { createConfirmEmailLink } from "./createConfirmEmailLink";
-// import { createTestConnection } from "./../jestGlobalSetup/createTestConnection";
 
 let userId = "";
 const redis = new Redis();
@@ -13,10 +13,10 @@ const redis = new Redis();
 let conn: Connection;
 
 beforeAll(async () => {
-  conn = await createTypeORMConnection();
+  conn = await createTestConnection();
   const user = await User.create({
-    email: "bob5@bob5.com",
-    password: "abcde12345",
+    email: faker.internet.email(),
+    password: faker.internet.password(),
   }).save();
 
   userId = user.id;
@@ -46,10 +46,4 @@ describe("Create confirm email link", () => {
     const value = await redis.get(key);
     expect(value).toBeNull();
   });
-
-  // it("Handle invalid if there is a bad id", async () => {
-  //   const response = await fetch(`${process.env.TEST_HOST}/confirm/1111`);
-  //   const text = await response.text();
-  //   expect(text).toEqual("invalid");
-  // });
 });

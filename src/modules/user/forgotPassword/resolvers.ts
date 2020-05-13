@@ -1,14 +1,14 @@
 import * as yup from "yup";
 import * as bcrypt from "bcryptjs";
 
-import { User } from "./../../entity/User";
-import { forgotPasswordLockAccount } from "./../../utils/forgotPasswordLockAccount";
-import { registerPasswordValidation } from "./../../yupSchema";
-import { forgotPasswordPrefix } from "./../../constants";
-import { ResolverMap } from "./../../types/graphql-utils.d";
+import { User } from "../../../entity/User";
+import { forgotPasswordLockAccount } from "../../../utils/forgotPasswordLockAccount";
+import { registerPasswordValidation } from "../../../yupSchema";
+import { forgotPasswordPrefix } from "../../../constants";
+import { ResolverMap } from "../../../types/graphql-utils";
 import { userNotFoundError, expiredKeyError } from "./errorMessage";
-import { createForgotPasswordLink } from "../../utils/createForgotPasswordLink";
-import { formatYupErrors } from "../../utils/formatYupErrors";
+import { createForgotPasswordLink } from "../../../utils/createForgotPasswordLink";
+import { formatYupErrors } from "../../../utils/formatYupErrors";
 
 // 20 minutes
 // lock account as soon as we send change account link (email)
@@ -20,9 +20,6 @@ const schema = yup.object().shape({
 });
 
 export const resolvers: ResolverMap = {
-  Query: {
-    dummy2: () => "bye",
-  },
   Mutation: {
     sendForgotPasswordEmail: async (
       _,

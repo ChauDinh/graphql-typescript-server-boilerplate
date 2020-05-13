@@ -1,9 +1,9 @@
-import { registerPasswordValidation } from "./../../yupSchema";
+import { registerPasswordValidation } from "../../../yupSchema";
 import * as yup from "yup";
 
-import { ResolverMap } from "../../types/graphql-utils";
-import { User } from "../../entity/User";
-import { formatYupErrors } from "./../../utils/formatYupErrors";
+import { ResolverMap } from "../../../types/graphql-utils";
+import { User } from "../../../entity/User";
+import { formatYupErrors } from "../../../utils/formatYupErrors";
 import { emailNotLongEnough, invalidEmail } from "./errorMessage";
 
 const schema = yup.object().shape({
@@ -12,15 +12,8 @@ const schema = yup.object().shape({
 });
 
 export const resolvers: ResolverMap = {
-  Query: {
-    bye: () => "bye",
-  },
   Mutation: {
-    register: async (
-      _,
-      args: GQL.IRegisterOnMutationArguments
-      // { redis, url }
-    ) => {
+    register: async (_, args: GQL.IRegisterOnMutationArguments) => {
       try {
         await schema.validate(args, {
           abortEarly: false,
@@ -50,18 +43,6 @@ export const resolvers: ResolverMap = {
       });
 
       await user.save();
-
-      // if (process.env.NODE_ENV !== "test") {
-      // // create and send a confirm email link
-      // await sendConfirmEmail(
-      // email,
-      // await createConfirmEmailLink(
-      // url,
-      // user.id,
-      // redis
-      // )
-      // );
-      // }
 
       return null;
     },

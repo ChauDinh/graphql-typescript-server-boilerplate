@@ -1,28 +1,26 @@
-import { createTypeORMConnection } from "./../../utils/createTypeORMConnection";
-import { TestClient } from "./../../utils/TestClient";
+import { createTestConnection } from "../../../testUtils/createTestConnection";
+import { TestClient } from "../../../utils/TestClient";
+import * as faker from "faker";
 
 import { notConfirmEmail, invalidLogin } from "./errorMessage";
-import { User } from "../../entity/User";
+import { User } from "../../../entity/User";
 // import { createTestConnection } from "./../../jestGlobalSetup/createTestConnection";
 import { Connection } from "typeorm";
 
-const email = "bob1@bob1.com";
-const password = "123abc";
+const email = faker.internet.email();
+const password = faker.internet.password();
+
+const client = new TestClient(process.env.TEST_HOST as string);
 
 let conn: Connection;
 beforeAll(async () => {
-  conn = await createTypeORMConnection();
+  conn = await createTestConnection();
 });
 afterAll(async () => {
   conn.close();
 });
 
-const loginExpectError = async (
-  client: TestClient,
-  e: string,
-  p: string,
-  errMsg: string
-) => {
+const loginExpectError = async (e: string, p: string, errMsg: string) => {
   const response = await client.login(e, p);
 
   expect(response.data).toEqual({
@@ -37,19 +35,22 @@ const loginExpectError = async (
 
 describe("Login user", () => {
   test("email not found send back error", async () => {
-    const client = new TestClient(process.env.TEST_HOST as string);
-    await loginExpectError(client, "bob@bob.com", "whatever123", invalidLogin);
+    await loginExpectError(
+      faker.internet.email(),
+      faker.internet.password(),
+      invalidLogin
+    );
   });
 
   test("email not confirmed", async () => {
     const client = new TestClient(process.env.TEST_HOST as string);
     await client.register(email, password);
 
-    await loginExpectError(client, email, password, notConfirmEmail);
+    await loginExpectError(email, password, notConfirmEmail);
 
     await User.update({ email }, { confirmed: true });
 
-    await loginExpectError(client, email, "adfasdfasdfasdf233", invalidLogin);
+    await loginExpectError(email, faker.internet.password(), invalidLogin);
 
     const response = await client.login(email, password);
     expect(response.data).toEqual({
