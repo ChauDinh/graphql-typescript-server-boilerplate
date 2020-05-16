@@ -6,6 +6,7 @@ import * as faker from "faker";
 import { User } from "../../../entity/User";
 // import { createTestConnection } from "./../../jestGlobalSetup/createTestConnection";
 
+faker.seed(Date.now() + 3);
 const email = faker.internet.email();
 const password = faker.internet.password();
 

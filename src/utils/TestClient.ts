@@ -32,21 +32,19 @@ export class TestClient {
     });
   }
 
-  async login(email: string, password: string) {
+  async logout() {
     return rp.post(this.url, {
       ...this.options,
       body: {
         query: `
           mutation {
-            login(email: "${email}", password: "${password}") {
-              path
-              message
-            }
+            logout 
           }
         `,
       },
     });
   }
+
   async forgotPasswordChange(newPassword: string, key: string) {
     return rp.post(this.url, {
       ...this.options,
@@ -79,13 +77,16 @@ export class TestClient {
     });
   }
 
-  async logout() {
+  async login(email: string, password: string) {
     return rp.post(this.url, {
       ...this.options,
       body: {
         query: `
           mutation {
-            logout 
+            login(email: "${email}", password: "${password}") {
+              path
+              message
+            }
           }
         `,
       },

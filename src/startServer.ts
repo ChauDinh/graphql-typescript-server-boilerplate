@@ -9,19 +9,17 @@ import * as RateLimitRedisStore from "rate-limit-redis";
 
 import { redis } from "./redis";
 import { createTypeORMConnection } from "./utils/createTypeORMConnection";
-import confirmRoute from "./routes/confirmEmail.route";
+import { confirmRoute } from "./routes/confirmEmail";
 import { redisSessionPrefix } from "./constants";
 import { createTestConnection } from "./testUtils/createTestConnection";
 
 const SESSION_SECRET = "bnjm39k0Ldf9XXedn";
-
-// Create Redis store session
-const RedisStore = connectRedis(session);
+const RedisStore = connectRedis(session as any);
 
 export const startServer = async () => {
-  // if (process.env.NODE_ENV === "test") {
-  //   await redis.flushall();
-  // }
+  if (process.env.NODE_ENV === "test") {
+    await redis.flushall();
+  }
 
   const server = new GraphQLServer({
     schema: generateSchema() as any,
@@ -51,7 +49,7 @@ export const startServer = async () => {
         client: redis as any,
         prefix: redisSessionPrefix,
       }),
-      name: "bid",
+      name: "qid",
       secret: SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
@@ -60,7 +58,7 @@ export const startServer = async () => {
         secure: process.env.NODE_ENV === "production",
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
       },
-    })
+    } as any)
   );
 
   // Setting CORS
@@ -73,7 +71,7 @@ export const startServer = async () => {
   };
 
   // GET route for confirm message
-  server.express.use("/confirm", confirmRoute);
+  server.express.get("/confirm/:id", confirmRoute);
 
   // Connect to the database
   if (process.env.NODE_ENV === "test") {

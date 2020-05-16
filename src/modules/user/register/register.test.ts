@@ -19,6 +19,7 @@ import {
  * when I run yarn test it also starts the server
  */
 
+faker.seed(Date.now() + 5);
 const email = faker.internet.email();
 const password = faker.internet.password();
 const client = new TestClient(process.env.TEST_HOST as string);

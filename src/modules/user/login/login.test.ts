@@ -7,6 +7,7 @@ import { User } from "../../../entity/User";
 // import { createTestConnection } from "./../../jestGlobalSetup/createTestConnection";
 import { Connection } from "typeorm";
 
+faker.seed(Date.now() + 1);
 const email = faker.internet.email();
 const password = faker.internet.password();
 
@@ -43,7 +44,6 @@ describe("Login user", () => {
   });
 
   test("email not confirmed", async () => {
-    const client = new TestClient(process.env.TEST_HOST as string);
     await client.register(email, password);
 
     await loginExpectError(email, password, notConfirmEmail);

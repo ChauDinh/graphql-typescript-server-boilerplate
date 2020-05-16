@@ -27,13 +27,14 @@ export const resolvers: ResolverMap = {
       { redis }
     ) => {
       const user = await User.findOne({ where: { email } });
-      if (!user)
+      if (!user) {
         return [
           {
             path: "email",
             message: userNotFoundError,
           },
         ];
+      }
 
       await forgotPasswordLockAccount(user.id, redis);
 
@@ -41,7 +42,6 @@ export const resolvers: ResolverMap = {
       await createForgotPasswordLink("", user.id, redis);
 
       // TODO: Send email with url
-
       return true;
     },
 

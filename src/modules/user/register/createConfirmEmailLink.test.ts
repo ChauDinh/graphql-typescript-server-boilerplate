@@ -9,6 +9,7 @@ import { createConfirmEmailLink } from "./createConfirmEmailLink";
 
 let userId = "";
 const redis = new Redis();
+faker.seed(Date.now() + 4);
 
 let conn: Connection;
 
@@ -26,24 +27,22 @@ afterAll(async () => {
   conn.close();
 });
 
-describe("Create confirm email link", () => {
-  it("Make sure createConfirmEmailLink works and clear key in redis", async () => {
-    const link = await createConfirmEmailLink(
-      process.env.TEST_HOST as string,
-      userId as string,
-      redis
-    );
+it("Make sure createConfirmEmailLink works and clear key in redis", async () => {
+  const link = await createConfirmEmailLink(
+    process.env.TEST_HOST as string,
+    userId as string,
+    redis
+  );
 
-    const response = await fetch(link);
-    const text = await response.text();
-    expect(text).toEqual("ok");
+  const response = await fetch(link);
+  const text = await response.text();
+  expect(text).toEqual("ok");
 
-    const user = await User.findOne({ where: { id: userId } });
-    expect((user as User).confirmed).toBeTruthy();
+  const user = await User.findOne({ where: { id: userId } });
+  expect((user as User).confirmed).toBeTruthy();
 
-    const chunks = link.split("/");
-    const key = chunks[chunks.length - 1];
-    const value = await redis.get(key);
-    expect(value).toBeNull();
-  });
+  const chunks = link.split("/");
+  const key = chunks[chunks.length - 1];
+  const value = await redis.get(key);
+  expect(value).toBeNull();
 });
